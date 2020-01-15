@@ -1,0 +1,118 @@
+<link rel="stylesheet" href="https://livecounts.io/assets/global/odometer.css">
+<script src="https://livecounts.io/assets/global/odometer.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+
+
+<h3>Gamevisits:</h3>
+<div style="font-size: 60px;" class="odometer gamevisits"></div>
+<div style="width: 600px;" id="chart1"></div>
+<h3>Forumvisits:</h3>
+<div style="font-size: 60px;" class="odometer forumposts"></div>
+<div style="width: 600px;" id="chart2"></div>
+<h3>Friends:</h3>
+<div style="font-size: 60px;" class="odometer friends"></div>
+<div style="width: 600px;"id="chart3"></div>
+
+<script>
+
+    var chart1 = new Highcharts.chart({
+        chart: {
+            renderTo: 'chart1',
+            type: 'line'
+        },
+        title: {
+            text: 'Gamevisits Graph'
+        },
+        xAxis: {
+            type: 'datetime',
+            tickPixelInterval: 150
+        },
+        yAxis: {
+            title: {
+                text: ''
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Gamevisits',
+            marker: {
+                enabled: false
+            }
+        }]
+    });
+
+    var chart2 = new Highcharts.chart({
+        chart: {
+            renderTo: 'chart2',
+            type: 'line'
+        },
+        title: {
+            text: 'Forumposts Graph'
+        },
+        xAxis: {
+            type: 'datetime',
+            tickPixelInterval: 150
+        },
+        yAxis: {
+            title: {
+                text: ''
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Forumposts',
+            marker: {
+                enabled: false
+            }
+        }]
+    });
+
+    var chart3 = new Highcharts.chart({
+        chart: {
+            renderTo: 'chart3',
+            type: 'line'
+        },
+        title: {
+            text: 'Friends Graph'
+        },
+        xAxis: {
+            type: 'datetime',
+            tickPixelInterval: 150
+        },
+        yAxis: {
+            title: {
+                text: ''
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Friends',
+            marker: {
+                enabled: false
+            }
+        }]
+    });
+
+    var user;
+    function getUrlVars(){var vars={};var parts=window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(m,key,value){vars[key]=value});return vars}
+    if(!getUrlVars()["u"]){user="1";}else{user=getUrlVars()["u"];}
+
+    setInterval(function() {
+        $.getJSON("https://api.livecounts.io/brickhill?username="+user, function(data) {
+            document.querySelector(".gamevisits").innerHTML = data[0].gameVisits;
+            document.querySelector(".forumposts").innerHTML = data[0].forumPosts;
+            document.querySelector(".friends").innerHTML = data[0].friends;
+
+            chart1.series[0].addPoint([(new Date()).getTime(), data[0].gameVisits])
+            chart2.series[0].addPoint([(new Date()).getTime(), data[0].forumPosts])
+            chart3.series[0].addPoint([(new Date()).getTime(), data[0].friends])
+        })
+    }, 3000)
+</script>
